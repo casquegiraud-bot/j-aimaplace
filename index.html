@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f7fbff"><title>J’AI MA PLACE ! — V14 TEST</title>
+<style>
+:root{--ink:#25344b;--muted:#68788e;--bg:#f5f9ff;--white:#fff;--blue:#dfefff;--green:#def5e8;--yellow:#fff0c7;--pink:#ffe4ec;--purple:#eee8ff;--red:#ffe4e4;--shadow:0 12px 35px rgba(45,70,105,.11)}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#f9fcff,#f4f8ff);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);min-height:100vh}
+.app{max-width:690px;margin:auto;padding:18px 15px calc(30px + env(safe-area-inset-bottom));min-height:100vh}
+.top{display:flex;align-items:center;gap:11px;margin:3px 3px 19px}.logo{width:45px;height:45px;border-radius:15px;background:var(--blue);display:grid;place-items:center;font-size:24px}.brand{font-weight:850}.version{font-size:12px;color:var(--muted)}
+.card{background:rgba(255,255,255,.96);border:1px solid #edf2f8;border-radius:28px;padding:24px 19px;box-shadow:var(--shadow)}
+.center{text-align:center}.hero{font-size:52px}h1{font-size:29px;line-height:1.12;margin:8px 0 10px}h2{font-size:23px;line-height:1.25;margin:5px 0 8px}h3{font-size:18px;margin:14px 0 7px}p{color:var(--muted);line-height:1.48;margin:7px 0 16px}
+.grid{display:grid;gap:11px;margin-top:16px}.choice{width:100%;border:0;border-radius:20px;padding:16px 15px;min-height:65px;text-align:left;display:flex;align-items:center;gap:12px;font-size:16px;font-weight:760;color:var(--ink);cursor:pointer;box-shadow:0 3px 10px rgba(40,60,90,.055)}.choice span{font-size:25px}.choice:active{transform:scale(.985)}
+.blue{background:var(--blue)}.green{background:var(--green)}.yellow{background:var(--yellow)}.pink{background:var(--pink)}.purple{background:var(--purple)}.red{background:var(--red)}
+.note{background:#f3f6fa;border-radius:17px;padding:14px 15px;color:var(--muted);font-size:13px;line-height:1.45;margin-top:17px}.progress{height:7px;background:#e9eef5;border-radius:8px;overflow:hidden;margin-bottom:21px}.bar{height:100%;background:#78b7e5;transition:.25s}.back{border:0;background:none;color:var(--muted);padding:6px 1px 10px;font-size:14px}.hidden{display:none!important}
+.story{background:#fffaf0;border-radius:22px;padding:18px;margin:18px 0;border:1px solid #f5e9cb}.storyTitle{font-size:20px;font-weight:850}.story p{color:var(--ink);margin:10px 0;line-height:1.55}.flow{display:flex;justify-content:space-between;align-items:center;gap:3px;background:#fff;border-radius:16px;padding:13px 8px;margin:14px 0;font-size:20px}.arrow{font-size:13px;color:#9aa6b6}.caption{font-size:11px;color:var(--muted)}
+.action{width:100%;border:0;border-radius:20px;padding:17px 14px;margin-top:11px;font-size:16px;font-weight:820;color:var(--ink)}.alert{background:#fff0f0;border:1px solid #ffd0d0;border-radius:18px;padding:15px;margin:15px 0;color:#743d3d;line-height:1.45}
+.tag{display:inline-block;background:var(--blue);border-radius:999px;padding:6px 10px;font-size:12px;font-weight:750;margin-bottom:8px}
+@media(min-width:600px){.app{padding-top:34px}.card{padding:32px}}
+
+.homeBadge{display:inline-flex;align-items:center;gap:7px;background:#eef7ff;color:#3d6380;border-radius:999px;padding:8px 12px;font-size:12px;font-weight:800;margin-bottom:8px}
+.slogan{font-size:17px!important;color:#4d617a!important;font-weight:650}
+.friendCard{margin-top:14px;background:linear-gradient(135deg,#f1ecff,#e5f4ff);border:1px solid #e6e2fb;border-radius:20px;padding:15px;text-align:left}
+.friendCard strong{display:block;font-size:16px;margin-bottom:4px}
+.meetingIntro{background:linear-gradient(135deg,#fff8dc,#f0f8ff);border:1px solid #f2e9c7;border-radius:22px;padding:18px;margin:18px 0}
+.bigChoice{min-height:86px!important;padding:18px!important;align-items:flex-start!important}
+.bigChoice .txt{font-size:16px;line-height:1.3}
+.bigChoice small{display:block;color:#607087;font-weight:550;font-size:13px;margin-top:4px;line-height:1.35}
+.badgeUrgent{display:inline-block;background:#ffe1e1;color:#8a3030;border-radius:999px;padding:7px 11px;font-size:12px;font-weight:850;margin-bottom:8px}
+.finalMark{font-size:17px;font-weight:850;color:#31445e;margin-top:18px}
+
+.homeCard{padding:0!important;overflow:hidden;background:linear-gradient(180deg,#ffffff 0%,#f7fbff 100%)}
+.homeHero{padding:34px 22px 23px;background:
+radial-gradient(circle at 15% 20%,rgba(222,245,232,.95),transparent 28%),
+radial-gradient(circle at 85% 18%,rgba(238,232,255,.95),transparent 30%),
+linear-gradient(135deg,#f8fcff,#fff);
+border-bottom:1px solid #edf2f8}
+.homeLogo{width:82px;height:82px;border-radius:27px;margin:0 auto 14px;display:grid;place-items:center;font-size:43px;background:linear-gradient(135deg,#def5e8,#dfefff,#eee8ff);box-shadow:0 13px 30px rgba(63,90,125,.14)}
+.homeHero h1{font-size:38px;margin:4px 0 8px;letter-spacing:-1px}
+.homeHero p{max-width:510px;margin:8px auto 0;font-size:16px;line-height:1.5}
+.homeBody{padding:22px 19px 25px}
+.homePrompt{font-size:19px;font-weight:850;margin:2px 0 14px;color:var(--ink)}
+.homeChoices{display:grid;gap:14px}
+.homeChoice{min-height:112px!important;padding:21px 18px!important;border-radius:24px!important;box-shadow:0 8px 22px rgba(45,70,105,.09)!important;align-items:center!important}
+.homeChoice>span{font-size:37px!important;min-width:46px;text-align:center}
+.homeChoice .main{font-size:19px;font-weight:850;line-height:1.2}
+.homeChoice .sub{font-size:13px;font-weight:560;color:#5f7085;line-height:1.4;margin-top:6px}
+.homeFooter{margin-top:18px;padding-top:16px;border-top:1px solid #edf2f8}
+.homeFooter .privacy{font-size:13px;line-height:1.45;color:var(--muted)}
+.menuBtn{width:100%;border:0;border-radius:20px;padding:17px 14px;margin-top:12px;font-size:16px;font-weight:820;background:var(--blue);color:var(--ink);cursor:pointer}
+@media(min-width:600px){.homeHero{padding:42px 32px 28px}.homeBody{padding:27px 31px 31px}.homeChoice{min-height:122px!important}}
+.peopleTogether{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:4px;max-width:430px;margin:0 auto 16px;padding:9px 13px;border-radius:24px;background:linear-gradient(135deg,rgba(222,245,232,.8),rgba(223,239,255,.8),rgba(238,232,255,.8));box-shadow:0 10px 26px rgba(63,90,125,.10)}.peopleTogether span{font-size:35px;line-height:1;filter:drop-shadow(0 3px 3px rgba(50,70,90,.08))}@media(max-width:430px){.peopleTogether{gap:2px;padding:10px 8px}.peopleTogether span{font-size:29px}}
+
+.endActions{display:grid;gap:14px;margin-top:24px}
+.endBubble{width:100%;border:0;border-radius:25px;padding:22px 18px;min-height:92px;text-align:left;display:flex;gap:15px;align-items:center;font-size:17px;font-weight:850;color:var(--ink);cursor:pointer;box-shadow:0 9px 24px rgba(45,70,105,.10)}
+.endBubble span{font-size:34px}.endBubble small{display:block;font-size:13px;font-weight:560;color:#607087;margin-top:5px;line-height:1.35}
+.messageBox{width:100%;min-height:150px;border:2px solid #e5ebf3;border-radius:20px;padding:15px;font:inherit;font-size:16px;color:var(--ink);resize:vertical;outline:none;background:#fbfdff}
+.messageBox:focus{border-color:#9bc9e8}
+
+.adminGear{position:fixed;right:14px;bottom:14px;width:45px;height:45px;border:0;border-radius:50%;background:#fff;color:#718096;font-size:21px;box-shadow:0 8px 24px rgba(40,60,90,.16);cursor:pointer;z-index:30}
+.field{width:100%;border:2px solid #e5ebf3;border-radius:17px;padding:14px;font:inherit;font-size:16px;color:var(--ink);background:#fff;outline:none;margin-top:9px}
+.field:focus{border-color:#9bc9e8}
+.slot{width:100%;border:2px solid #e6edf5;border-radius:19px;background:#fff;padding:15px;text-align:left;margin:8px 0;cursor:pointer;color:var(--ink)}
+.slot strong{display:block;font-size:16px}.slot small{color:var(--muted)}
+.codeBox{font-size:34px;font-weight:900;letter-spacing:1px;background:var(--green);padding:20px;border-radius:22px;margin:18px 0;text-align:center}
+.adminStat{padding:17px;border-radius:20px;font-weight:850;font-size:18px}
+.adminItem{background:#f8fbff;border:1px solid #e7eef7;border-radius:18px;padding:15px;margin:10px 0;text-align:left}
+.adminItem small{color:var(--muted)} .adminItem p{color:var(--ink);white-space:pre-wrap;margin:8px 0}
+</style></head>
+<body><main class="app">
+<header class="top"><div class="logo">💛</div><div><div class="brand">J’AI MA PLACE !</div><div class="version">Comprendre • En parler • Être aidé • V14 TEST</div></div></header>
+<section id="home" class="card center homeCard">
+<div class="homeHero">
+  <div class="peopleTogether" aria-label="Des personnes qui se donnent la main"><span>🧑🏻‍🤝‍🧑🏽</span><span>👭</span><span>👬</span><span>🧑🏾‍🤝‍🧑🏼</span><span>👫</span></div>
+  <div class="homeBadge">🏫 AU COLLÈGE, CHACUN COMPTE</div>
+  <h1>J’AI MA PLACE !</h1>
+  <p>Un espace simple pour faire le point sur ce que tu vis au collège, comprendre une situation de harcèlement et trouver la bonne personne à qui en parler.</p>
+</div>
+<div class="homeBody">
+  <div class="homePrompt">Aujourd’hui, tu viens pour…</div>
+  <div class="homeChoices">
+    <button class="choice green homeChoice" onclick="start()">
+      <span>🌱</span>
+      <div style="text-align:left"><div class="main">Ça me concerne</div><div class="sub">Quelque chose me gêne, me blesse ou m’inquiète. Je veux faire le point.</div></div>
+    </button>
+    <button class="choice purple homeChoice" onclick="friendStart()">
+      <span>🧑‍🤝‍🧑</span>
+      <div style="text-align:left"><div class="main">Je m’inquiète pour un(e) ami(e)</div><div class="sub">J’ai vu ou entendu quelque chose. Je voudrais savoir comment l’aider.</div></div>
+    </button>
+  </div>
+  <div class="homeFooter">
+    <div class="privacy" style="display:flex;align-items:flex-start;gap:10px;text-align:left">
+  <span style="font-size:22px;line-height:1.2">🔒</span>
+  <div>
+    <strong>Tu n’as pas besoin de donner ton nom.</strong><br>
+    <span>– Tu peux arrêter quand tu veux.</span><br>
+    <span>– L’application t’aide à ouvrir la parole.</span><br>
+    <span>– Elle t’aide à trouver du soutien.</span>
+  </div>
+</div>
+  </div>
+</div>
+</section>
+<section id="quiz" class="card hidden"><button class="back" onclick="back()">← Retour</button><div class="progress"><div id="bar" class="bar"></div></div><div id="box"></div></section>
+<section id="result" class="card hidden"></section>
+</main><button id="adminGear" class="adminGear" onclick="gearTap()" aria-label="Paramètres">⚙️</button>
+<script>
+const FIREBASE_DB="https://j-ai-ma-place-default-rtdb.europe-west1.firebasedatabase.app";
+let gearClicks=0, gearTimer=null;
+
+async function fbPost(path,data){
+ const r=await fetch(`${FIREBASE_DB}/${path}.json`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
+ if(!r.ok) throw new Error("Firebase "+r.status);
+ return r.json();
+}
+async function fbGet(path){
+ const r=await fetch(`${FIREBASE_DB}/${path}.json`);
+ if(!r.ok) throw new Error("Firebase "+r.status);
+ return r.json();
+}
+async function fbPut(path,data){
+ const r=await fetch(`${FIREBASE_DB}/${path}.json`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
+ if(!r.ok) throw new Error("Firebase "+r.status);
+ return r.json();
+}
+function gearTap(){
+ gearClicks++;
+ clearTimeout(gearTimer);
+ gearTimer=setTimeout(()=>gearClicks=0,1200);
+ if(gearClicks>=3){gearClicks=0;clearTimeout(gearTimer);adminLogin();}
+}
+function adminLogin(){
+ show("result");
+ document.getElementById("result").innerHTML=`<div class="center"><div class="hero">🛡️</div><h2>Espace équipe pHARe</h2><p>Accès de démonstration.</p></div>
+ <input id="adminCode" class="field" type="password" placeholder="Code d’accès" autocomplete="off">
+ <button class="action purple" onclick="checkAdmin()">Accéder au tableau de bord</button>
+ <button class="menuBtn" onclick="goHome()">⌂ Retour</button>`;
+}
+function checkAdmin(){
+ const v=(document.getElementById("adminCode").value||"").trim().toUpperCase();
+ if(v==="PHARE") adminDashboard(); else alert("Code incorrect.");
+}
+async function adminDashboard(){
+ document.getElementById("result").innerHTML=`<div class="center"><div class="hero">📊</div><h2>Tableau de bord pHARe</h2><p>Chargement des demandes…</p></div>`;
+ try{
+  const [m,r]=await Promise.all([fbGet("messages"),fbGet("rendezvous")]);
+  const msgs=m?Object.entries(m):[], rdvs=r?Object.entries(r):[];
+  const newM=msgs.filter(([,x])=>x.statut!=="traite").length;
+  const newR=rdvs.filter(([,x])=>x.statut!=="traite").length;
+  let items=[...msgs.map(([id,x])=>({id,type:"MESSAGE",...x})),...rdvs.map(([id,x])=>({id,type:"RENDEZ-VOUS",...x}))].sort((a,b)=>(b.timestamp||0)-(a.timestamp||0));
+  let list=items.length?items.map(x=>`<div class="adminItem"><small>${x.type} • ${new Date(x.timestamp||Date.now()).toLocaleString("fr-FR")}</small>
+   <strong>${x.code?x.code+" • ":""}${x.adulte||"Adulte non précisé"}</strong>
+   ${x.creneau?`<p>📅 ${x.creneau}</p>`:""}${x.message?`<p>${escapeHtml(x.message)}</p>`:""}
+   <button class="action green" onclick="markDone('${x.type==="MESSAGE"?"messages":"rendezvous"}','${x.id}')">✓ Marquer traité</button></div>`).join(""):`<div class="note">Aucune demande pour le moment.</div>`;
+  document.getElementById("result").innerHTML=`<div class="center"><div class="hero">📊</div><h2>Tableau de bord pHARe</h2></div>
+   <div class="grid"><div class="adminStat purple">💬 ${newM} message(s) à traiter</div><div class="adminStat green">📅 ${newR} rendez-vous à traiter</div></div>
+   <h3>Demandes reçues</h3>${list}<button class="menuBtn" onclick="adminDashboard()">↻ Actualiser</button><button class="menuBtn" onclick="goHome()">⌂ Retour à l’accueil</button>`;
+ }catch(e){
+  document.getElementById("result").innerHTML=`<div class="center"><div class="hero">⚠️</div><h2>Connexion Firebase refusée</h2><p>Pour l’essai, vérifie que les règles autorisent temporairement la lecture et l’écriture.</p></div><button class="menuBtn" onclick="goHome()">⌂ Retour</button>`;
+ }
+}
+async function markDone(path,id){
+ try{const x=await fbGet(`${path}/${id}`); if(x){x.statut="traite";await fbPut(`${path}/${id}`,x)} adminDashboard()}catch(e){alert("Impossible de modifier la demande.");}
+}
+function escapeHtml(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+const C=["blue","green","yellow","pink","purple"];
+const adults=["Mon professeur principal","Un autre professeur","La CPE / la vie scolaire","L'infirmière scolaire","Un AED / assistant d'éducation","Un autre adulte du collège","Je ne sais pas encore"];
+const themes={
+mock:{label:"des moqueries ou des insultes",story:"mock"},
+exclude:{label:"une mise à l'écart",story:"exclude"},
+rumor:{label:"des rumeurs ou une humiliation",story:"rumor"},
+physical:{label:"des gestes ou violences physiques",story:"physical"},
+fear:{label:"de la peur ou des menaces",story:"fear"},
+online:{label:"une situation sur le téléphone ou Internet",story:"online"},
+pressure:{label:"de la pression ou du chantage",story:"pressure"},
+unknown:{label:"une situation difficile à définir",story:"unknown"}
+};
+const state={adult:"",theme:"",repeat:null,duration:"",group:null,impact:0,online:false,told:false,danger:false,details:[],mode:"self"};
+let stack=[], step=0;
+function show(x){["home","quiz","result"].forEach(id=>document.getElementById(id).classList.toggle("hidden",id!==x));scrollTo(0,0)}
+function goHome(){stack=[];step=0;show("home")}
+function start(){Object.assign(state,{adult:"",theme:"",repeat:null,duration:"",group:null,impact:0,online:false,told:false,danger:false,details:[],mode:"self"});stack=[];step=0;show("quiz");adultQ()}
+function setProgress(){document.getElementById("bar").style.width=Math.min(92,12+step*9)+"%"}
+function screen(title,sub,opts,fn){step++;setProgress();let h=`<h2>${title}</h2>${sub?`<p>${sub}</p>`:""}<div class="grid">`;opts.forEach((o,i)=>h+=`<button class="choice ${o[2]||C[i%C.length]}" onclick="${fn}(${i})"><span>${o[0]}</span>${o[1]}</button>`);document.getElementById("box").innerHTML=h+"</div>"}
+function snap(fn){stack.push({s:JSON.stringify(state),step,fn})}
+function back(){if(!stack.length){show("home");return}let x=stack.pop();Object.assign(state,JSON.parse(x.s));step=x.step;window[x.fn]()}
+function adultQ(){screen("Au collège, avec quel adulte te sens-tu le plus en confiance ?","Pas forcément pour parler de ce problème : simplement un adulte avec qui tu te sens bien.",adults.map((x,i)=>[i===6?"🤷":"🤝",x,C[i%C.length]]),"adultPick")}
+function adultPick(i){snap("adultQ");state.adult=adults[i];entryQ()}
+function entryQ(){screen("Qu'est-ce qui t'amène ici aujourd'hui ?","Choisis ce qui ressemble le plus à ce que tu vis.",[
+["😔","On se moque de moi ou on m'insulte"],["🚫","On me met à l'écart"],["🗣️","On raconte des choses sur moi / on m'humilie"],["🤕","On me bouscule, me frappe ou me fait mal"],["😨","Quelqu'un me fait peur ou me menace"],["📱","Ça se passe sur mon téléphone ou Internet"],["✋","On me met la pression ou on me fait du chantage"],["🤔","Je ne sais pas vraiment / autre chose"]],"entryPick")}
+function entryPick(i){snap("entryQ");state.theme=["mock","exclude","rumor","physical","fear","online","pressure","unknown"][i];if(["physical","fear","pressure"].includes(state.theme)) safetyQ();else if(state.theme==="online") onlineKindQ();else repeatQ()}
+function safetyQ(){screen("Est-ce que tu te sens en danger maintenant ?","Par exemple : tu as peur que quelqu'un te fasse du mal aujourd'hui.",[["🌿","Non"],["🤔","Je ne sais pas"],["🆘","Oui","red"]],"safetyPick")}
+function safetyPick(i){snap("safetyQ");state.danger=i===2;if(i===2){urgentResult();return}state.impact+=i; if(state.theme==="physical") physicalQ();else if(state.theme==="pressure") pressureQ();else repeatQ()}
+function physicalQ(){screen("Qu'est-ce qui arrive le plus souvent ?","",[
+["✋","On me pousse ou me bouscule"],["👊","On me frappe / me fait mal"],["🎒","On prend ou abîme mes affaires"],["🤐","Je préfère ne pas préciser"]],"physicalPick")}
+function physicalPick(i){snap("physicalQ");state.details.push(["bousculades","coups","affaires prises ou abîmées","sans précision"][i]);state.impact+=i===1?3:1;repeatQ()}
+function pressureQ(){screen("Cette personne essaie-t-elle de t'obliger à faire quelque chose ?","",[
+["😕","Oui"],["📸","Oui, avec une photo / un message / un secret"],["🤔","Je ne sais pas"],["🌿","Non"]],"pressurePick")}
+function pressurePick(i){snap("pressureQ");state.impact+=i<2?2:0;state.online=i===1;repeatQ()}
+function onlineKindQ(){screen("Sur le téléphone ou Internet, qu'est-ce qui se passe ?","",[
+["💬","Messages blessants ou insultes"],["👥","Un groupe se moque de moi / m'exclut"],["📸","Une photo, vidéo ou capture est partagée"],["🗣️","Des rumeurs circulent"],["😨","Je reçois des menaces"],["🤔","Autre chose"]],"onlineKindPick")}
+function onlineKindPick(i){snap("onlineKindQ");state.online=true;state.details.push(["messages blessants","groupe","contenu partagé","rumeurs","menaces","autre"][i]);state.impact+=i===4?3:(i===2?2:1);if(i===4)safetyQ();else repeatQ()}
+function repeatQ(){screen("Est-ce que ça s'est produit plusieurs fois ?","",[
+["🌤️","Non, une seule fois"],["🟡","Quelques fois"],["🟠","Oui, souvent"],["🔁","Oui, presque tous les jours"]],"repeatPick")}
+function repeatPick(i){snap("repeatQ");state.repeat=i;state.impact+=i;if(i>=1)durationQ();else impactQ()}
+function durationQ(){screen("Depuis combien de temps environ ?","",[
+["🌱","Depuis peu"],["📅","Depuis plusieurs semaines"],["🗓️","Depuis plusieurs mois"],["🤷","Je ne sais pas"]],"durationPick")}
+function durationPick(i){snap("durationQ");state.duration=["peu","semaines","mois","inconnu"][i];state.impact+=i===2?2:(i===1?1:0);groupQ()}
+function groupQ(){screen("Combien de personnes participent à cette situation ?","",[
+["👤","Une personne"],["👥","Plusieurs personnes"],["👀","D'autres regardent ou encouragent"],["🤷","Je ne sais pas"]],"groupPick")}
+function groupPick(i){snap("groupQ");state.group=i;state.impact+=i===1||i===2?1:0;impactQ()}
+function impactQ(){screen("Aujourd'hui, qu'est-ce que cette situation provoque surtout pour toi ?","",[
+["🙂","Ça ne me gêne pas beaucoup"],["😕","Ça me gêne / ça m'énerve"],["😔","Ça me rend triste ou me donne envie de m'isoler"],["😟","J'ai peur de venir au collège ou de croiser quelqu'un"],["😣","Je me sens vraiment très mal"]],"impactPick")}
+function impactPick(i){snap("impactQ");state.impact+=i*2;if(i>=3&&!state.danger){safety2Q()}else toldQ()}
+function safety2Q(){screen("Est-ce que tu as peur qu'il t'arrive quelque chose aujourd'hui ?","Je te pose cette question parce que tu m'as dit que la situation te fait peur.",[["🌿","Non"],["🤔","Je ne sais pas"],["🆘","Oui","red"]],"safety2Pick")}
+function safety2Pick(i){snap("safety2Q");if(i===2){state.danger=true;urgentResult()}else{state.impact+=i;toldQ()}}
+function toldQ(){screen("Est-ce que tu en as déjà parlé à quelqu'un ?","",[
+["🤝","Oui, à un adulte"],["👫","Oui, à un ami / une amie"],["🏠","Oui, à ma famille"],["🤐","Non, à personne"]],"toldPick")}
+function toldPick(i){snap("toldQ");state.told=i!==3;finish()}
+function makeStory(){
+ const data={
+  mock:["Lucas","Dans un autre collège, Lucas subissait des moqueries","Les moqueries"],
+  exclude:["Inès","Dans un autre collège, Inès était souvent mise à l'écart","La mise à l'écart"],
+  rumor:["Camille","Dans un autre collège, Camille entendait des rumeurs blessantes sur elle","Les rumeurs"],
+  physical:["Sam","Dans un autre collège, Sam était bousculé et parfois malmené","Ces gestes"],
+  fear:["Lou","Dans un autre collège, Lou avait peur d'un élève","Cette situation"],
+  online:["Alex","Dans un autre collège, Alex recevait des messages blessants sur son téléphone","Les messages"],
+  pressure:["Maël","Dans un autre collège, Maël subissait la pression d'un autre élève","Cette pression"],
+  unknown:["Charlie","Dans un autre collège, Charlie ne se sentait pas bien, sans vraiment savoir comment l'expliquer","Ce malaise"]
+ };
+ const d=data[state.theme]||data.unknown, n=d[0];
+ const female=["Inès","Camille","Lou"].includes(n);
+ const il=female?"elle":"il", Il=female?"Elle":"Il";
+ let timing="";
+ if(state.repeat===3) timing=" presque tous les jours";
+ else if(state.repeat===2) timing=" régulièrement";
+ else if(state.repeat===1) timing=" plusieurs fois";
+ let duration="";
+ if(state.duration==="semaines") duration=" depuis plusieurs semaines";
+ else if(state.duration==="mois") duration=" depuis plusieurs mois";
+ let group="";
+ if(state.group===1) group=" Plusieurs élèves participaient.";
+ else if(state.group===2) group=" D'autres élèves regardaient ou encourageaient.";
+ let impact=state.impact>=8
+   ? ` Petit à petit, ${n} se sentait de plus en plus mal et avait peur de certains moments au collège.`
+   : state.impact>=5
+   ? ` Petit à petit, ${n} devenait triste et pensait souvent à cette situation.`
+   : ` Même si ${n} essayait de ne pas y penser, cela commençait à ${female?"la":"le"} gêner.`;
+ let digital=state.online && state.theme!=="online" ? " Le problème continuait aussi sur son téléphone." : "";
+ let adult=state.adult && state.adult!=="Je ne sais pas encore" ? state.adult : "un adulte du collège";
+ return {
+  title:`L'histoire de ${n}`,
+  p1:`${d[1]}${timing}${duration}.${group}${digital}`,
+  p2:`${impact.trim()} ${Il} a finalement décidé d'en parler à un adulte de confiance. 🗣️`,
+  p3:`L'adulte l'a écouté${female?"e":""} et a pris la situation au sérieux. Avec d'autres adultes du collège, il a agi pour aider ${n} et faire cesser le problème. 🤝🛡️`,
+  p4:`${d[2]} ont fini par s'arrêter. ${n} s'est senti${female?"e":""} mieux et a retrouvé des journées plus tranquilles au collège. 🌤️🙂`,
+  adult
+ };
+}
+function finish(){
+ show("result");
+ let st=makeStory(), serious=state.impact>=8;
+ let rep=state.repeat>=2?"Tu m'as indiqué que cette situation se répète. ":"";
+ let imp=state.impact>=6?"Tu as aussi indiqué qu'elle te fait souffrir ou te met mal à l'aise. ":"";
+ document.getElementById("result").innerHTML=`
+ <div class="center"><div class="hero">${serious?"🫶":"💛"}</div>
+ <h2>${serious?"Ce que tu racontes mérite l'attention d'un adulte.":"Merci de m'avoir répondu."}</h2>
+ <p>${rep}${imp}</p><h3 style="font-size:22px;margin:20px 0 4px;color:var(--ink)">📖 Lis cette petite histoire avant de partir.</h3></div>
+ <div class="story">
+   <div class="storyTitle">${st.title}</div>
+   <p style="font-size:17px;line-height:1.6">${st.p1}</p>
+   <p style="font-size:17px;line-height:1.6">${st.p2}</p>
+   <p style="font-size:17px;line-height:1.6">${st.p3}</p>
+   <p style="font-size:17px;line-height:1.6"><strong>${st.p4}</strong></p>
+   <div class="flow"><span>😟</span><span class="arrow">→</span><span>🗣️</span><span class="arrow">→</span><span>🤝</span><span class="arrow">→</span><span>🛡️</span><span class="arrow">→</span><span>🌤️</span></div>
+   <div class="caption">Seul face au problème → j'en parle → on m'écoute → les adultes agissent → la situation s'améliore</div>
+ </div>
+ <button class="action green" style="font-size:21px;padding:21px 16px;min-height:76px;margin-top:20px" onclick="appointmentPage()">Continuer &nbsp; ➜</button>
+ <p class="caption center" style="font-size:13px;margin-top:12px">Quand tu as terminé de lire, appuie sur Continuer.</p>`}
+function appointmentPage(){
+ const st=makeStory();
+ const adult=st.adult;
+ document.getElementById("result").innerHTML=`
+ <div class="center">
+   <div class="hero">🤝</div>
+   <h2 style="font-size:28px">Tu veux faire le prochain pas ?</h2>
+   <p style="font-size:17px;line-height:1.55">Tu as choisi <strong>${adult}</strong>. Tu peux maintenant choisir la façon la plus simple de prendre contact.</p>
+ </div>
+ <div class="endActions">
+   <button class="endBubble purple" onclick="writeMessagePage()">
+     <span>✍️</span><div>JE SOUHAITE ÉCRIRE UN MESSAGE<small>Je peux écrire avec mes mots ce que je souhaite dire à ${adult}.</small></div>
+   </button>
+   <button class="endBubble green" onclick="appointmentChoicePage()">
+     <span>📅</span><div>PRENDRE UN RENDEZ-VOUS<small>Je souhaite rencontrer ${adult} au collège.</small></div>
+   </button>
+ </div>
+ <button class="menuBtn" onclick="goHome()">⌂ Revenir au menu principal</button>
+ <p class="caption center" style="margin-top:13px">Version de démonstration : aucun message ni rendez-vous n’est transmis automatiquement.</p>`;
+ scrollTo(0,0);
+}
+function writeMessagePage(){
+ const adult=state.adult&&state.adult!=="Je ne sais pas encore"?state.adult:"un adulte du collège";
+ document.getElementById("result").innerHTML=`
+ <div class="center"><div class="hero">✍️</div><h2>Écrire un message anonyme</h2>
+ <p>Ce message sera destiné à <strong>${adult}</strong>. Aucun nom, prénom ou classe ne t’est demandé.</p></div>
+ <textarea id="studentMessage" class="messageBox" maxlength="1200" placeholder="Écris ton message ici…"></textarea>
+ <div class="note">🔒 Ton message est anonyme. Évite d’écrire ton nom si tu souhaites rester anonyme. Tu peux raconter seulement ce que tu veux.</div>
+ <button id="sendMsgBtn" class="action green" onclick="sendAnonymousMessage()">💬 Envoyer mon message</button>
+ <button class="menuBtn" onclick="appointmentPage()">← Revenir aux choix</button>`;
+ scrollTo(0,0);
+}
+async function sendAnonymousMessage(){
+ const box=document.getElementById("studentMessage"), txt=(box?.value||"").trim();
+ if(!txt){box.focus();return}
+ const btn=document.getElementById("sendMsgBtn"); btn.disabled=true;btn.textContent="Envoi…";
+ const adult=state.adult&&state.adult!=="Je ne sais pas encore"?state.adult:"Un adulte du collège";
+ try{
+  await fbPost("messages",{message:txt,adulte:adult,mode:state.mode||"self",timestamp:Date.now(),statut:"nouveau"});
+  document.getElementById("result").innerHTML=`<div class="center"><div class="hero">✅</div><h2>Ton message a été envoyé.</h2>
+  <p>Il a été déposé anonymement pour l’équipe qui consultera J’AI MA PLACE !</p></div>
+  <div class="note">Aucun nom, prénom ou classe n’a été demandé.</div><button class="menuBtn" onclick="goHome()">⌂ Revenir au menu principal</button>`;
+ }catch(e){
+  btn.disabled=false;btn.textContent="💬 Réessayer";
+  alert("L’envoi n’a pas fonctionné. Vérifie les règles Firebase du mode essai.");
+ }
+}
+function appointmentChoicePage(){
+ const adult=state.adult&&state.adult!=="Je ne sais pas encore"?state.adult:"un adulte du collège";
+ document.getElementById("result").innerHTML=`
+ <div class="center"><div class="hero">📅</div><h2>Prendre rendez-vous avec ${adult}</h2>
+ <p>Tu peux choisir comment tu souhaites venir à ce rendez-vous.</p></div>
+ <div class="grid">
+   <button class="choice green bigChoice" onclick="slotPage('seul')"><span>👤</span><div class="txt">Je viens seul(e)<small>Je choisis un créneau anonyme avec ${adult}.</small></div></button>
+   <button class="choice blue bigChoice" onclick="slotPage('avec un ami')"><span>🧑‍🤝‍🧑</span><div class="txt">Je viens avec un(e) ami(e)<small>Je choisis un créneau et mon ami(e) m’accompagne.</small></div></button>
+   <button class="choice purple bigChoice" onclick="slotPage('intermediaire')"><span>💬</span><div class="txt">Un(e) ami(e) fait d’abord l’intermédiaire<small>Je réserve anonymement et mon ami(e) peut faire le premier contact.</small></div></button>
+   <button class="choice yellow bigChoice" onclick="other()"><span>🤝</span><div class="txt">Je préfère finalement un autre adulte<small>Je peux changer d’avis.</small></div></button>
+ </div>
+ <button class="menuBtn" onclick="appointmentPage()">← Revenir aux choix</button>`;
+ scrollTo(0,0);
+}
+
+async function nextPhareCode(){
+ try{
+  const all=await fbGet("rendezvous");
+  let max=0;
+  if(all) Object.values(all).forEach(x=>{const m=String(x.code||"").match(/^PHARE-(\d+)$/);if(m)max=Math.max(max,+m[1])});
+  return "PHARE-"+(max+1);
+ }catch(e){return "PHARE-"+Math.floor(100+Math.random()*900)}
+}
+function slotPage(accompagnement){
+ const adult=state.adult&&state.adult!=="Je ne sais pas encore"?state.adult:"un adulte du collège";
+ // Créneaux de démonstration : ils seront ensuite administrables depuis Firebase.
+ const slots=["Lundi • 10 h 15","Lundi • 13 h 30","Mardi • 10 h 15","Mardi • 15 h 30","Jeudi • 10 h 15","Jeudi • 13 h 30","Vendredi • 10 h 15"];
+ document.getElementById("result").innerHTML=`<div class="center"><div class="hero">📅</div><h2>Choisis un créneau</h2>
+ <p>Rendez-vous anonyme avec <strong>${adult}</strong>. Personne ne te demande ton identité dans l’application.</p></div>
+ ${slots.map(s=>`<button class="slot" onclick="reserveSlot('${s}','${accompagnement}')"><strong>🕒 ${s}</strong><small>${adult}</small></button>`).join("")}
+ <button class="menuBtn" onclick="appointmentChoicePage()">← Retour</button>`;
+ scrollTo(0,0);
+}
+async function reserveSlot(slot,accompagnement){
+ const adult=state.adult&&state.adult!=="Je ne sais pas encore"?state.adult:"Un adulte du collège";
+ document.getElementById("result").innerHTML=`<div class="center"><div class="hero">⏳</div><h2>Réservation en cours…</h2></div>`;
+ try{
+  const code=await nextPhareCode();
+  await fbPost("rendezvous",{code,creneau:slot,adulte:adult,accompagnement,timestamp:Date.now(),statut:"nouveau"});
+  document.getElementById("result").innerHTML=`<div class="center"><div class="hero">✅</div><h2>Ton rendez-vous est réservé.</h2>
+  <p><strong>${slot}</strong><br>avec <strong>${adult}</strong></p>
+  <div class="codeBox">${code}</div>
+  <p>Garde ce code ou fais une capture d’écran. Présente-toi au rendez-vous et donne simplement <strong>${code}</strong>.</p></div>
+  <div class="note">🔒 La réservation ne contient ni ton nom, ni ton prénom, ni ta classe.</div>
+  <button class="menuBtn" onclick="goHome()">⌂ Revenir à l’accueil</button>`;
+ }catch(e){
+  document.getElementById("result").innerHTML=`<div class="center"><div class="hero">⚠️</div><h2>La réservation n’a pas fonctionné.</h2><p>Vérifie les règles Firebase du mode essai puis réessaie.</p></div><button class="menuBtn" onclick="appointmentChoicePage()">← Retour</button>`;
+ }
+}
+
+function urgentResult(){
+ show("result");
+ let adult=state.adult&&state.adult!=="Je ne sais pas encore"?state.adult:"un adulte présent dans le collège";
+ document.getElementById("result").innerHTML=`
+ <div class="center"><div class="badgeUrgent">SITUATION À PRENDRE EN CHARGE MAINTENANT</div><div class="hero">🆘</div>
+ <h2>Ne reste pas seul(e) avec ça.</h2>
+ <p>Tu viens d’indiquer que tu peux être en danger aujourd’hui. Dans ce cas, le plus important est de rejoindre un adulte immédiatement.</p></div>
+ <div class="alert"><strong>➡️ Va directement voir ${adult}.</strong><br>Tu peux y aller seul(e), avec un(e) ami(e), ou demander à un(e) ami(e) d’aller chercher un adulte pour toi.</div>
+ <button class="action green" onclick="meeting('urgent')">🤝 J’ai compris</button>
+ <p class="caption center">Si le premier adulte n’est pas disponible, adresse-toi immédiatement à un autre adulte du collège.</p><button class="menuBtn" onclick="goHome()">⌂ Revenir au menu principal</button>`;
+}
+function meeting(kind){
+ const adult=state.adult&&state.adult!=="Je ne sais pas encore"?state.adult:"un adulte du collège";
+ let content="";
+ if(kind==="withfriend") content=`<div class="hero">🧑‍🤝‍🧑</div><h2>Tu peux venir accompagné(e).</h2><p>Choisis un(e) ami(e) avec qui tu te sens en confiance. Vous pourrez aller ensemble voir <strong>${adult}</strong>. Ton ami(e) peut rester avec toi si cela t’aide à commencer à parler.</p><div class="note">Tu n’as pas besoin de tout raconter parfaitement. Tu peux simplement dire : <strong>« J’ai besoin de parler de quelque chose qui se passe au collège. »</strong></div>`;
+ else if(kind==="relay") content=`<div class="hero">💬</div><h2>Ton ami(e) peut faire le premier pas.</h2><p>Si parler directement est trop difficile, tu peux demander à un(e) ami(e) de prévenir <strong>${adult}</strong> que tu aimerais être aidé(e).</p><div class="friendCard"><strong>📱 Tu peux lui montrer cet écran :</strong>« J’ai besoin d’aide pour parler de quelque chose à un adulte. Est-ce que tu peux m’accompagner ou aller voir un adulte pour lui dire que j’aimerais le rencontrer ? »</div>`;
+ else if(kind==="later") content=`<div class="hero">🌱</div><h2>Tu peux prendre un peu de temps.</h2><p>Tu n’es pas obligé(e) de tout décider maintenant. Mais ce que tu ressens compte. Tu peux revenir sur cette application ou en parler plus tard à une personne de confiance.</p><div class="note">Si la situation s’aggrave, si tu as peur ou si tu te sens en danger, n’attends pas : va voir un adulte immédiatement.</div>`;
+ else if(kind==="urgent") content=`<div class="hero">🛡️</div><h2>Va vers un adulte maintenant.</h2><p>Tu peux demander à un(e) ami(e) de venir avec toi ou d’aller chercher un adulte. L’objectif est que tu ne restes pas seul(e) face à cette situation.</p>`;
+ else content=`<div class="hero">🤝</div><h2>Tu as fait un premier pas.</h2><p>Tu peux aller voir <strong>${adult}</strong> et lui dire simplement que tu as besoin de parler. Tu n’as pas besoin de trouver les mots parfaits.</p>`;
+ document.getElementById("result").innerHTML=`<div class="center">${content}<div class="finalMark">J’AI MA PLACE ! 💛</div></div><button class="action blue" onclick="goHome()">↻ Revenir à l’accueil</button>`;
+ scrollTo(0,0);
+}
+function other(){
+ let h=`<div class="center"><div class="hero">🤝</div><h2>Avec quel autre adulte préférerais-tu parler ?</h2><p>Choisis simplement celui qui te met le plus en confiance.</p></div><div class="grid">`;
+ adults.slice(0,-1).forEach((a,i)=>h+=`<button class="choice ${C[i%C.length]}" onclick="state.adult='${a.replaceAll("'","\\'")}';appointmentPage()"><span>🤝</span>${a}</button>`);
+ document.getElementById("result").innerHTML=h+`</div><button class="menuBtn" onclick="goHome()">⌂ Revenir au menu principal</button>`;scrollTo(0,0);
+}
+
+/* Parcours témoin / ami */
+function friendStart(){
+ Object.assign(state,{adult:"",theme:"",repeat:null,duration:"",group:null,impact:0,online:false,told:false,danger:false,details:[],mode:"friend"});
+ stack=[];step=0;show("quiz");friendAdultQ();
+}
+function friendAdultQ(){
+ screen("Si tu devais demander de l’aide pour ton ami(e), quel adulte choisirais-tu ?","Choisis un adulte du collège qui pourrait écouter et aider.",adults.map((x,i)=>[i===6?"🤷":"🤝",x,C[i%C.length]]),"friendAdultPick")
+}
+function friendAdultPick(i){snap("friendAdultQ");state.adult=adults[i];friendConcernQ()}
+function friendConcernQ(){
+ screen("Qu’est-ce qui t’inquiète chez ton ami(e) ?","Choisis ce qui ressemble le plus à ce que tu as vu ou entendu.",[
+ ["😔","On se moque de lui / d’elle ou on l’insulte"],["🚫","Il / elle est mis(e) à l’écart"],["🗣️","Des rumeurs ou humiliations circulent"],["🤕","Il / elle subit des gestes ou violences"],["😨","Il / elle a peur ou reçoit des menaces"],["📱","Ça se passe aussi sur le téléphone / Internet"],["🤐","Il / elle m’a confié quelque chose qui m’inquiète"],["🤔","Je ne sais pas exactement"]
+ ],"friendConcernPick")
+}
+function friendConcernPick(i){
+ snap("friendConcernQ");
+ state.theme=["mock","exclude","rumor","physical","fear","online","unknown","unknown"][i];
+ state.impact+=(i===3||i===4)?3:1;
+ friendDangerQ();
+}
+function friendDangerQ(){
+ screen("Penses-tu que ton ami(e) peut être en danger aujourd’hui ?","Par exemple : peur d’être frappé(e), menacé(e), attendu(e) à la sortie ou situation qui semble urgente.",[
+ ["🌿","Non"],["🤔","Je ne sais pas"],["🆘","Oui","red"]
+ ],"friendDangerPick")
+}
+function friendDangerPick(i){
+ snap("friendDangerQ");
+ if(i===2){friendUrgent();return}
+ state.impact+=i;friendRepeatQ();
+}
+function friendRepeatQ(){
+ screen("Est-ce que cette situation semble se répéter ?","",[
+ ["🌤️","Je pense que c’est arrivé une fois"],["🟡","Quelques fois"],["🟠","Oui, souvent"],["🔁","Oui, presque tous les jours"],["🤷","Je ne sais pas"]
+ ],"friendRepeatPick")
+}
+function friendRepeatPick(i){
+ snap("friendRepeatQ");state.repeat=i===4?null:i;state.impact+=i===4?0:Math.min(i,3);friendTalkQ();
+}
+function friendTalkQ(){
+ screen("Ton ami(e) a-t-il / elle déjà parlé à un adulte ?","",[
+ ["🤝","Oui"],["🤐","Non"],["❓","Je ne sais pas"],["😟","Il / elle n’ose pas en parler"]
+ ],"friendTalkPick")
+}
+function friendTalkPick(i){snap("friendTalkQ");state.told=i===0;friendResult()}
+function friendResult(){
+ show("result");
+ const adult=state.adult&&state.adult!=="Je ne sais pas encore"?state.adult:"un adulte du collège";
+ document.getElementById("result").innerHTML=`
+ <div class="center"><div class="hero">🧑‍🤝‍🧑</div><h2>Tu peux vraiment l’aider.</h2>
+ <p>Tu n’as pas à enquêter ni à régler la situation toi-même. Ton rôle peut simplement être de <strong>ne pas laisser ton ami(e) seul(e)</strong> et de l’aider à rejoindre un adulte.</p></div>
+ <div class="meetingIntro"><strong>Ce que tu peux faire maintenant :</strong><br><span style="color:var(--muted)">proposer de l’accompagner, ou aller voir ${adult} pour expliquer que tu es inquiet / inquiète.</span></div>
+ <div class="grid">
+ <button class="choice green bigChoice" onclick="friendAction('accompany')"><span>🧑‍🤝‍🧑</span><div class="txt">Je vais lui proposer de venir avec moi<small>Nous irons ensemble voir ${adult}.</small></div></button>
+ <button class="choice purple bigChoice" onclick="friendAction('relay')"><span>💬</span><div class="txt">Je vais en parler d’abord à ${adult}<small>Je peux faire l’intermédiaire si mon ami(e) n’ose pas encore.</small></div></button>
+ <button class="choice yellow bigChoice" onclick="friendAction('show')"><span>📱</span><div class="txt">Je vais lui montrer J’AI MA PLACE !<small>Il / elle pourra faire son propre parcours quand il / elle se sentira prêt(e).</small></div></button>
+ </div>
+ <div class="note">Être un bon ami ne veut pas dire garder seul un secret qui concerne la sécurité ou le bien-être de quelqu’un. Demander l’aide d’un adulte, c’est chercher du soutien.</div><button class="menuBtn" onclick="goHome()">⌂ Revenir au menu principal</button>`;
+ scrollTo(0,0);
+}
+function friendUrgent(){
+ show("result");
+ const adult=state.adult&&state.adult!=="Je ne sais pas encore"?state.adult:"un adulte du collège";
+ document.getElementById("result").innerHTML=`
+ <div class="center"><div class="badgeUrgent">TON AMI(E) PEUT AVOIR BESOIN D’AIDE MAINTENANT</div><div class="hero">🆘</div>
+ <h2>Va chercher un adulte.</h2><p>Tu penses que ton ami(e) peut être en danger aujourd’hui. Ne reste pas seul(e) avec cette inquiétude.</p></div>
+ <div class="alert"><strong>➡️ Va voir ${adult} ou un autre adulte disponible maintenant.</strong><br>Explique simplement que tu es inquiet / inquiète pour un(e) camarade et que tu souhaites qu’un adulte intervienne.</div>
+ <button class="action green" onclick="friendAction('urgent')">🤝 J’ai compris</button><button class="menuBtn" onclick="goHome()">⌂ Revenir au menu principal</button>`;
+}
+function friendAction(kind){
+ const adult=state.adult&&state.adult!=="Je ne sais pas encore"?state.adult:"un adulte du collège";
+ let t=kind==="relay"?`Tu peux aller voir <strong>${adult}</strong> et dire simplement : « Je suis inquiet / inquiète pour un(e) camarade et j’aimerais vous en parler. »`
+ :kind==="show"?`Tu peux lui montrer l’application sans le/la forcer. Reste disponible et rappelle-lui qu’il / elle peut aussi demander l’aide d’un adulte.`
+ :kind==="urgent"?`Va maintenant vers <strong>${adult}</strong> ou vers un autre adulte disponible.`
+ :`Propose-lui simplement : « Si tu veux, je viens avec toi. » Vous pourrez aller ensemble voir <strong>${adult}</strong>.`;
+ document.getElementById("result").innerHTML=`<div class="center"><div class="hero">💛</div><h2>Être là, c’est déjà important.</h2><p>${t}</p><div class="finalMark">J’AI MA PLACE ! — et mon ami(e) aussi.</div></div><button class="action blue" onclick="goHome()">↻ Revenir à l’accueil</button>`;
+ scrollTo(0,0);
+}
+</script></body></html>
