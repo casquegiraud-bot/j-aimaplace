@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#f7fbff"><title>J’AI MA PLACE ! — V14 TEST</title>
+<meta name="theme-color" content="#f7fbff"><title>J’AI MA PLACE ! — V15 TEST</title>
 <style>
 :root{--ink:#25344b;--muted:#68788e;--bg:#f5f9ff;--white:#fff;--blue:#dfefff;--green:#def5e8;--yellow:#fff0c7;--pink:#ffe4ec;--purple:#eee8ff;--red:#ffe4e4;--shadow:0 12px 35px rgba(45,70,105,.11)}
 *{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#f9fcff,#f4f8ff);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);min-height:100vh}
@@ -68,7 +68,7 @@ border-bottom:1px solid #edf2f8}
 .adminItem small{color:var(--muted)} .adminItem p{color:var(--ink);white-space:pre-wrap;margin:8px 0}
 </style></head>
 <body><main class="app">
-<header class="top"><div class="logo">💛</div><div><div class="brand">J’AI MA PLACE !</div><div class="version">Comprendre • En parler • Être aidé • V14 TEST</div></div></header>
+<header class="top"><div class="logo">💛</div><div><div class="brand">J’AI MA PLACE !</div><div class="version">Comprendre • En parler • Être aidé • V15 TEST</div></div></header>
 <section id="home" class="card center homeCard">
 <div class="homeHero">
   <div class="peopleTogether" aria-label="Des personnes qui se donnent la main"><span>🧑🏻‍🤝‍🧑🏽</span><span>👭</span><span>👬</span><span>🧑🏾‍🤝‍🧑🏼</span><span>👫</span></div>
@@ -295,7 +295,7 @@ function appointmentPage(){
    </button>
  </div>
  <button class="menuBtn" onclick="goHome()">⌂ Revenir au menu principal</button>
- <p class="caption center" style="margin-top:13px">Version de démonstration : aucun message ni rendez-vous n’est transmis automatiquement.</p>`;
+ <p class="caption center" style="margin-top:13px">Version V15 de test : les demandes sont enregistrées dans Firebase si la connexion est autorisée. Les alertes email nécessitent l’activation de la fonction serveur.</p>`;
  scrollTo(0,0);
 }
 function writeMessagePage(){
@@ -327,11 +327,11 @@ async function sendAnonymousMessage(){
 function appointmentChoicePage(){
  const adult=state.adult&&state.adult!=="Je ne sais pas encore"?state.adult:"un adulte du collège";
  document.getElementById("result").innerHTML=`
- <div class="center"><div class="hero">📅</div><h2>Prendre rendez-vous avec ${adult}</h2>
- <p>Tu peux choisir comment tu souhaites venir à ce rendez-vous.</p></div>
+ <div class="center"><div class="hero">📅</div><h2>Prendre un rendez-vous</h2>
+ <p>Choisis comment venir. Ensuite, tu choisiras un enseignant parmi cinq noms fictifs, puis le jour. L’horaire sera toujours <strong>12 h 50 à 13 h 10</strong>.</p></div>
  <div class="grid">
-   <button class="choice green bigChoice" onclick="slotPage('seul')"><span>👤</span><div class="txt">Je viens seul(e)<small>Je choisis un créneau anonyme avec ${adult}.</small></div></button>
-   <button class="choice blue bigChoice" onclick="slotPage('avec un ami')"><span>🧑‍🤝‍🧑</span><div class="txt">Je viens avec un(e) ami(e)<small>Je choisis un créneau et mon ami(e) m’accompagne.</small></div></button>
+   <button class="choice green bigChoice" onclick="slotPage('seul')"><span>👤</span><div class="txt">Je viens seul(e)<small>Je choisis un enseignant et un jour, anonymement.</small></div></button>
+   <button class="choice blue bigChoice" onclick="slotPage('avec un ami')"><span>🧑‍🤝‍🧑</span><div class="txt">Je viens avec un(e) ami(e)<small>Je choisis un enseignant et un jour, et mon ami(e) m’accompagne.</small></div></button>
    <button class="choice purple bigChoice" onclick="slotPage('intermediaire')"><span>💬</span><div class="txt">Un(e) ami(e) fait d’abord l’intermédiaire<small>Je réserve anonymement et mon ami(e) peut faire le premier contact.</small></div></button>
    <button class="choice yellow bigChoice" onclick="other()"><span>🤝</span><div class="txt">Je préfère finalement un autre adulte<small>Je peux changer d’avis.</small></div></button>
  </div>
@@ -347,24 +347,65 @@ async function nextPhareCode(){
   return "PHARE-"+(max+1);
  }catch(e){return "PHARE-"+Math.floor(100+Math.random()*900)}
 }
+// V15 TEST : 5 noms fictifs pour expérimenter la prise de rendez-vous.
+const enseignantsTest=[
+ {id:"martin",nom:"Mme Sophie Martin"},
+ {id:"bernard",nom:"M. Julien Bernard"},
+ {id:"petit",nom:"Mme Claire Petit"},
+ {id:"moreau",nom:"M. Thomas Moreau"},
+ {id:"laurent",nom:"Mme Émilie Laurent"}
+];
+const HEURE_RDV="12 h 50 à 13 h 10";
+function dateISOlocale(d){
+ return [d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-");
+}
+function dateLongue(iso){
+ return new Intl.DateTimeFormat("fr-FR",{weekday:"long",day:"numeric",month:"long",year:"numeric"}).format(new Date(iso+"T12:50:00"));
+}
+function prochainsJoursCollege(){
+ const today=new Date(),jours=[];
+ // Mercredi / samedi / dimanche exclus : horaires d'essai, hors vacances scolaires.
+ for(let i=0;i<45&&jours.length<10;i++){
+  const d=new Date(today.getFullYear(),today.getMonth(),today.getDate()+i);
+  if([0,3,6].includes(d.getDay()))continue;
+  if(i===0&&(today.getHours()>12||(today.getHours()===12&&today.getMinutes()>=50)))continue;
+  jours.push(dateISOlocale(d));
+ }
+ return jours;
+}
 function slotPage(accompagnement){
- const adult=state.adult&&state.adult!=="Je ne sais pas encore"?state.adult:"un adulte du collège";
- // Créneaux de démonstration : ils seront ensuite administrables depuis Firebase.
- const slots=["Lundi • 10 h 15","Lundi • 13 h 30","Mardi • 10 h 15","Mardi • 15 h 30","Jeudi • 10 h 15","Jeudi • 13 h 30","Vendredi • 10 h 15"];
- document.getElementById("result").innerHTML=`<div class="center"><div class="hero">📅</div><h2>Choisis un créneau</h2>
- <p>Rendez-vous anonyme avec <strong>${adult}</strong>. Personne ne te demande ton identité dans l’application.</p></div>
- ${slots.map(s=>`<button class="slot" onclick="reserveSlot('${s}','${accompagnement}')"><strong>🕒 ${s}</strong><small>${adult}</small></button>`).join("")}
+ document.getElementById("result").innerHTML=`<div class="center"><div class="hero">👩‍🏫</div><h2>Choisis ton enseignant</h2>
+ <p>Pour ce test, tu peux prendre rendez-vous avec l'un des cinq enseignants proposés. Le seul horaire possible sera de <strong>${HEURE_RDV}</strong>.</p></div>
+ ${enseignantsTest.map((t,i)=>`<button class="slot" onclick="dateRdvPage(${i},'${accompagnement}')"><strong>🤝 ${t.nom}</strong><small>Rendez-vous anonyme</small></button>`).join("")}
  <button class="menuBtn" onclick="appointmentChoicePage()">← Retour</button>`;
  scrollTo(0,0);
 }
-async function reserveSlot(slot,accompagnement){
- const adult=state.adult&&state.adult!=="Je ne sais pas encore"?state.adult:"Un adulte du collège";
+function dateRdvPage(index,accompagnement){
+ const enseignant=enseignantsTest[index];
+ if(!enseignant)return;
+ const jours=prochainsJoursCollege();
+ document.getElementById("result").innerHTML=`<div class="center"><div class="hero">📅</div><h2>Choisis le jour</h2>
+ <p>Avec <strong>${enseignant.nom}</strong>. Un seul horaire : <strong>${HEURE_RDV}</strong>. Pas de rendez-vous le mercredi ni le week-end.</p></div>
+ ${jours.map(j=>`<button class="slot" onclick="reserveSlot('${j}',${index},'${accompagnement}')"><strong>🕒 ${dateLongue(j)}</strong><small>${HEURE_RDV}</small></button>`).join("")}
+ <div class="note">Créneaux de test : la disponibilité réelle de l'enseignant et les vacances scolaires ne sont pas encore vérifiées automatiquement.</div>
+ <button class="menuBtn" onclick="slotPage('${accompagnement}')">← Changer d’enseignant</button>`;
+ scrollTo(0,0);
+}
+async function reserveSlot(jour,index,accompagnement){
+ const enseignant=enseignantsTest[index];
+ if(!enseignant||!/^\d{4}-\d{2}-\d{2}$/.test(jour))return;
+ const creneau=`${dateLongue(jour)} • ${HEURE_RDV}`;
  document.getElementById("result").innerHTML=`<div class="center"><div class="hero">⏳</div><h2>Réservation en cours…</h2></div>`;
  try{
   const code=await nextPhareCode();
-  await fbPost("rendezvous",{code,creneau:slot,adulte:adult,accompagnement,timestamp:Date.now(),statut:"nouveau"});
+  await fbPost("rendezvous",{
+   code,creneau,date:jour,heureDebut:"12:50",heureFin:"13:10",
+   adulte:enseignant.nom,enseignantId:enseignant.id,
+   adulteChoisiInitialement:state.adult||"",accompagnement,
+   mode:state.mode||"self",timestamp:Date.now(),statut:"nouveau"
+  });
   document.getElementById("result").innerHTML=`<div class="center"><div class="hero">✅</div><h2>Ton rendez-vous est réservé.</h2>
-  <p><strong>${slot}</strong><br>avec <strong>${adult}</strong></p>
+  <p><strong>${creneau}</strong><br>avec <strong>${enseignant.nom}</strong></p>
   <div class="codeBox">${code}</div>
   <p>Garde ce code ou fais une capture d’écran. Présente-toi au rendez-vous et donne simplement <strong>${code}</strong>.</p></div>
   <div class="note">🔒 La réservation ne contient ni ton nom, ni ton prénom, ni ta classe.</div>
