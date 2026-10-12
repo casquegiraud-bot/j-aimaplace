@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#f7fbff"><title>J’AI MA PLACE ! — V15 TEST</title>
+<meta name="theme-color" content="#f7fbff"><title>J’AI MA PLACE ! — V16 TEST</title>
 <style>
 :root{--ink:#25344b;--muted:#68788e;--bg:#f5f9ff;--white:#fff;--blue:#dfefff;--green:#def5e8;--yellow:#fff0c7;--pink:#ffe4ec;--purple:#eee8ff;--red:#ffe4e4;--shadow:0 12px 35px rgba(45,70,105,.11)}
 *{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#f9fcff,#f4f8ff);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);min-height:100vh}
@@ -68,7 +68,7 @@ border-bottom:1px solid #edf2f8}
 .adminItem small{color:var(--muted)} .adminItem p{color:var(--ink);white-space:pre-wrap;margin:8px 0}
 </style></head>
 <body><main class="app">
-<header class="top"><div class="logo">💛</div><div><div class="brand">J’AI MA PLACE !</div><div class="version">Comprendre • En parler • Être aidé • V15 TEST</div></div></header>
+<header class="top"><div class="logo">💛</div><div><div class="brand">J’AI MA PLACE !</div><div class="version">Comprendre • En parler • Être aidé • V16 TEST</div></div></header>
 <section id="home" class="card center homeCard">
 <div class="homeHero">
   <div class="peopleTogether" aria-label="Des personnes qui se donnent la main"><span>🧑🏻‍🤝‍🧑🏽</span><span>👭</span><span>👬</span><span>🧑🏾‍🤝‍🧑🏼</span><span>👫</span></div>
@@ -141,26 +141,74 @@ function checkAdmin(){
  if(v==="PHARE") adminDashboard(); else alert("Code incorrect.");
 }
 async function adminDashboard(){
- document.getElementById("result").innerHTML=`<div class="center"><div class="hero">📊</div><h2>Tableau de bord pHARe</h2><p>Chargement des demandes…</p></div>`;
+ document.getElementById("result").innerHTML='<div class="center"><h2>Tableau de bord pHARe</h2><p>Chargement…</p></div>';
  try{
   const [m,r]=await Promise.all([fbGet("messages"),fbGet("rendezvous")]);
   const msgs=m?Object.entries(m):[], rdvs=r?Object.entries(r):[];
-  const newM=msgs.filter(([,x])=>x.statut!=="traite").length;
-  const newR=rdvs.filter(([,x])=>x.statut!=="traite").length;
-  let items=[...msgs.map(([id,x])=>({id,type:"MESSAGE",...x})),...rdvs.map(([id,x])=>({id,type:"RENDEZ-VOUS",...x}))].sort((a,b)=>(b.timestamp||0)-(a.timestamp||0));
-  let list=items.length?items.map(x=>`<div class="adminItem"><small>${x.type} • ${new Date(x.timestamp||Date.now()).toLocaleString("fr-FR")}</small>
-   <strong>${x.code?x.code+" • ":""}${x.adulte||"Adulte non précisé"}</strong>
-   ${x.creneau?`<p>📅 ${x.creneau}</p>`:""}${x.message?`<p>${escapeHtml(x.message)}</p>`:""}
-   <button class="action green" onclick="markDone('${x.type==="MESSAGE"?"messages":"rendezvous"}','${x.id}')">✓ Marquer traité</button></div>`).join(""):`<div class="note">Aucune demande pour le moment.</div>`;
-  document.getElementById("result").innerHTML=`<div class="center"><div class="hero">📊</div><h2>Tableau de bord pHARe</h2></div>
+  const isPending=x=>x.statut!=="traite"&&x.statut!=="pris_en_compte";
+  const newM=msgs.filter(([,x])=>isPending(x)).length;
+  const newR=rdvs.filter(([,x])=>isPending(x)).length;
+  const items=[
+   ...msgs.map(([id,x])=>({id,path:"messages",type:"MESSAGE",...x})),
+   ...rdvs.map(([id,x])=>({id,path:"rendezvous",type:"RENDEZ-VOUS",...x}))
+  ].sort((a,b)=>Number(isPending(b))-Number(isPending(a))||(b.timestamp||0)-(a.timestamp||0));
+  const list=items.length?items.map(x=>{
+   const pending=isPending(x);
+   const statut=pending?"🔴 Nouveau": "✓ Pris en compte";
+   return `<div class="adminItem">
+    <small>${escapeHtml(x.type)} • ${new Date(x.timestamp||Date.now()).toLocaleString("fr-FR")} • ${statut}</small>
+    <strong>${escapeHtml(x.code||"")} ${escapeHtml(x.adulte||"Adulte non précisé")}</strong>
+    ${x.creneau?`<p>📅 ${escapeHtml(x.creneau)}</p>`:""}
+    ${x.accompagnement?`<p>👥 ${escapeHtml(x.accompagnement)}</p>`:""}
+    ${x.message?`<p>${escapeHtml(x.message)}</p>`:""}
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+     <button class="action green" style="margin:0;padding:12px 6px;font-size:14px" ${pending?"":"disabled"} onclick="adminSetStatus('${x.path}','${x.id}',this)">✓ Pris en compte</button>
+     <button class="action red" style="margin:0;padding:12px 6px;font-size:14px" onclick="adminDelete('${x.path}','${x.id}',this)">🗑 Supprimer</button>
+    </div></div>`;
+  }).join(""):'<div class="note">Aucune demande pour le moment.</div>';
+  document.getElementById("result").innerHTML=`
+   <div class="center"><div class="hero">📊</div><h2>Tableau de bord pHARe — V16</h2></div>
+   ${newR?`<div class="alert" style="font-size:19px;font-weight:850;text-align:center">🔴 ${newR} NOUVEAU${newR>1?"X":""} RENDEZ-VOUS À PRENDRE EN COMPTE</div>`:
+   '<div class="note" style="text-align:center">✓ Aucun nouveau rendez-vous en attente.</div>'}
    <div class="grid"><div class="adminStat purple">💬 ${newM} message(s) à traiter</div><div class="adminStat green">📅 ${newR} rendez-vous à traiter</div></div>
-   <h3>Demandes reçues</h3>${list}<button class="menuBtn" onclick="adminDashboard()">↻ Actualiser</button><button class="menuBtn" onclick="goHome()">⌂ Retour à l’accueil</button>`;
+   <h3>Demandes reçues</h3>${list}
+   <button class="menuBtn" onclick="adminDashboard()">↻ Actualiser</button>
+   <button class="menuBtn" onclick="goHome()">⌂ Retour à l’accueil</button>`;
  }catch(e){
-  document.getElementById("result").innerHTML=`<div class="center"><div class="hero">⚠️</div><h2>Connexion Firebase refusée</h2><p>Pour l’essai, vérifie que les règles autorisent temporairement la lecture et l’écriture.</p></div><button class="menuBtn" onclick="goHome()">⌂ Retour</button>`;
+  document.getElementById("result").innerHTML=`<div class="center"><h2>⚠️ Connexion Firebase impossible</h2><p>${escapeHtml(e.message)}</p><p>Vérifie les règles Firebase de lecture.</p></div><button class="menuBtn" onclick="goHome()">⌂ Retour</button>`;
  }
 }
-async function markDone(path,id){
- try{const x=await fbGet(`${path}/${id}`); if(x){x.statut="traite";await fbPut(`${path}/${id}`,x)} adminDashboard()}catch(e){alert("Impossible de modifier la demande.");}
+async function fbPatch(path,data){
+ const r=await fetch(`${FIREBASE_DB}/${path}.json`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
+ if(!r.ok)throw new Error("Firebase "+r.status);
+ return r.json();
+}
+async function fbDelete(path){
+ const r=await fetch(`${FIREBASE_DB}/${path}.json`,{method:"DELETE"});
+ if(!r.ok)throw new Error("Firebase "+r.status);
+}
+async function adminSetStatus(path,id,btn){
+ if(!["messages","rendezvous"].includes(path)||!/^[A-Za-z0-9_-]+$/.test(id))return;
+ btn.disabled=true;btn.textContent="Enregistrement…";
+ try{
+  await fbPatch(`${path}/${id}`,{statut:"pris_en_compte",traiteLe:Date.now()});
+  await adminDashboard();
+ }catch(e){
+  btn.disabled=false;btn.textContent="✓ Pris en compte";
+  alert("Impossible de traiter : "+e.message+". Vérifie les autorisations d'écriture Firebase.");
+ }
+}
+async function adminDelete(path,id,btn){
+ if(!["messages","rendezvous"].includes(path)||!/^[A-Za-z0-9_-]+$/.test(id))return;
+ if(!confirm("Supprimer définitivement cette demande de Firebase ? Cette action est irréversible."))return;
+ btn.disabled=true;btn.textContent="Suppression…";
+ try{
+  await fbDelete(`${path}/${id}`);
+  await adminDashboard();
+ }catch(e){
+  btn.disabled=false;btn.textContent="🗑 Supprimer";
+  alert("Suppression impossible : "+e.message+". Vérifie les autorisations Firebase.");
+ }
 }
 function escapeHtml(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 const C=["blue","green","yellow","pink","purple"];
@@ -347,7 +395,7 @@ async function nextPhareCode(){
   return "PHARE-"+(max+1);
  }catch(e){return "PHARE-"+Math.floor(100+Math.random()*900)}
 }
-// V15 TEST : 5 noms fictifs pour expérimenter la prise de rendez-vous.
+// V16 TEST : 5 noms fictifs pour expérimenter la prise de rendez-vous.
 const enseignantsTest=[
  {id:"martin",nom:"Mme Sophie Martin"},
  {id:"bernard",nom:"M. Julien Bernard"},
